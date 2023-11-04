@@ -3,13 +3,22 @@ session_start();
 include 'navbar2.php';
 require 'database.php';
 if (isset($_POST['postActualite'])) {
-    $image= $_POST['image'];
+    $image= $_FILES['image']['name'];
+    $image_tmp= $_FILES['image']['tmp_name'];
     $titre=$_POST['titre'];
     $description= $_POST['description'];
     $contenu= $_POST['contenu'];
 
+    // Specify the directory where you want to save the uploaded files
+    $upload_dir = 'upload_directory/';
+    $target_file = $upload_dir . $image;
+
+    // Move the uploaded file to the specified directory
+    if (move_uploaded_file($image_tmp, $target_file)) {
     $stm=$bdd->prepare('INSERT INTO actualite(image,titre,description,contenu) VALUES(?,?,?,?)');
     $stm->execute(array($image,$titre,$description,$contenu));
+    }
+
 }
 
 ?>
@@ -18,12 +27,11 @@ if (isset($_POST['postActualite'])) {
 <div class="container py-4">
 
     <!-- Bootstrap 5 starter form -->
-    <form  data-sb-form-api-token="API_TOKEN" method="post" class="container">
-  
+    <form  data-sb-form-api-token="API_TOKEN" method="post" class="container" enctype="multipart/form-data">
       <!-- Name input -->
       <div class="mb-3">
-        <label class="form-label" for="name">Image link</label>
-        <input class="form-control"  type="text" placeholder="Name" data-sb-validations="required" name="image" />
+        <label class="form-label" for="name">Image Upload</label>
+        <input class="form-control"  type="file" placeholder="Name" data-sb-validations="required" name="image" />
         <div class="invalid-feedback" data-sb-feedback="name:required">Image is required.</div>
       </div>
             <!-- Name input -->
@@ -32,33 +40,26 @@ if (isset($_POST['postActualite'])) {
         <input class="form-control"  type="text" placeholder="Name" data-sb-validations="required" name="titre" />
         <div class="invalid-feedback" data-sb-feedback="name:required">Title is required.</div>
       </div>
-
-
-  
       <!-- Message input -->
       <div class="mb-3">
         <label class="form-label" for="message">Description</label>
         <textarea class="form-control" name="description" type="text" placeholder="Message" style="height: 10rem;" data-sb-validations="required"></textarea>
         <div class="invalid-feedback" data-sb-feedback="message:required">Description is required.</div>
       </div>
-
             <!-- Message input -->
             <div class="mb-3">
         <label class="form-label" for="message">Content</label>
         <textarea class="form-control" name="contenu" type="text" placeholder="Message" style="height: 10rem;" data-sb-validations="required"></textarea>
         <div class="invalid-feedback" data-sb-feedback="message:required">Content is required.</div>
       </div>
-  
       <!-- Form submissions success message -->
       <div class="d-none" id="submitSuccessMessage">
         <div class="text-center mb-3">Form submission successful!</div>
       </div>
-  
       <!-- Form submissions error message -->
       <div class="d-none" id="submitErrorMessage">
         <div class="text-center text-danger mb-3">Error sending message!</div>
       </div>
-  
       <!-- Form submit button -->
       <div class="d-grid">
       <input type="hidden" name="postActualite" value="1">

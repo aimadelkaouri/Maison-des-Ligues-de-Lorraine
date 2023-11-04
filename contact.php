@@ -41,7 +41,7 @@ if (isset($_POST['contact'])) {
 
       <div class="mb-3">
         <label class="form-label" for="subject">Subject</label>
-        <input class="form-control" name="objet" type="text" placeholder="subjcet" data-sb-validations="required" />
+        <input class="form-control" name="objet" type="text" placeholder="subject" data-sb-validations="required" />
       </div>
 
 
